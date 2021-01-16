@@ -5,7 +5,7 @@ function [Max_BPM,Min_BPM] = BPM_Calc(ecg_data_f,Fs)
 %Dept of Electrical Engineering, 
 %University of Texas at Dallas, Texas, USA
 % GNU General public License
-
+%
 
     ecg_data1 =ecg_data_f - mean(ecg_data_f);
 
