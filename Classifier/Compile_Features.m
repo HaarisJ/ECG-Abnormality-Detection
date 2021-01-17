@@ -48,8 +48,8 @@ features_HRV = Heart_Rate_Variability_Features(ecg, fs, R_Wave_Index);
 all_features = [Features_SD Features_Freq Features_ADC Features_soa Features_statistical features_HRV Features_Physiological];
 
 % Need to add NaN and Inf handling
-load MeanVector_208
-MeanVect = MeanVector_208;
+load MeanVector
+MeanVect = MeanVector;
 replaceFeat = union(find(isnan(all_features)),find(isinf(abs(all_features))));
 all_features(replaceFeat) = MeanVect(replaceFeat);
 

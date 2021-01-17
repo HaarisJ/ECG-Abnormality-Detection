@@ -18,9 +18,9 @@ labels = string(zeros(1, N));
 err = 0;
 
 % load train_model
-load BoostS1 
-load BoostS2 
-load BoostS3
+load AdaBoostPrimary
+load AdaBoostSecondaryA
+load AdaBoostSecondaryB
 
 for i=1:N
     fs = testSet.Freq{i};

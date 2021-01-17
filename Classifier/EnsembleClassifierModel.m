@@ -1,77 +1,51 @@
-function [PredictedAnnotation] = EnsembleClassifierModel(FeatureVector,tb_allS1,tb_allS2,tb_allS3)
+function [PredictedLabel] = EnsembleClassifierModel(FeatureVector,AdaBoostPrimary,AdaBoostSecondaryB,AdaBoostSecondaryA)
+% Ensembling of 3 Adaboost classifiers to generate 2 levels with level 1
+% splitting it into NSR and AFib or into Other and Too Noisy. Second level
+% of classifiers will seperate them further into their own class.
 
-%
-% Copyright (C) 2017
-% Shreyasi Datta
-% Chetanya Puri
-% Ayan Mukherjee
-% Rohan Banerjee
-% Anirban Dutta Choudhury
-% Arijit Ukil
-% Soma Bandyopadhyay
-% Rituraj Singh
-% Arpan Pal
-% Sundeep Khandelwal
-%
-% This program is free software; you can redistribute it and/or
-% modify it under the terms of the GNU General Public License
-% as published by the Free Software Foundation; either version 2
-% of the License, or (at your option) any later version.
-%
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; if not, write to the Free Software
-% Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+% Loading in which features are required by each classifier
+load ClassifierFeatureBreakdown
+PrimaryClassifier_FeatureIndex  = L1 ;
+SecondaryClassifierB_FeatureIndex  = L3 ;
+SecondaryClassifierA_FeatureIndex  = L2 ;
 
-load FeatureIndices209
-L1_Ind  = L1 ;
-L2_ind  = L2 ;
-L3_ind  = L3 ;
+% Predicition Placeholder
+PredictedLabel = 1;
 
-% prediction stage
-PredictedAnnotation     = 1; %%Intial prediction
+ensemblePredictFcnL1 = @(x) predict(AdaBoostPrimary, x);
+trainedClassifier.predictFcnL1 = @(x) ensemblePredictFcnL1(x);
 
-ensemblePredictFcnL1            = @(x) predict(tb_allS1 , x);
-trainedClassifier.predictFcnL1  = @(x) ensemblePredictFcnL1(x);
-ensemblePredictFcnL3            = @(x) predict(tb_allS3, x);
-trainedClassifier.predictFcnL3  = @(x) ensemblePredictFcnL3(x);
-ensemblePredictFcnL2            = @(x) predict(tb_allS2, x);
+ensemblePredictFcnL3 = @(x) predict(AdaBoostSecondaryA, x);
+trainedClassifier.predictFcnL3 = @(x) ensemblePredictFcnL3(x);
+
+ensemblePredictFcnL2 = @(x) predict(AdaBoostSecondaryB, x);
 trainedClassifier.predictFcnL2  = @(x) ensemblePredictFcnL2(x);
 
-%%%Cascade level one:
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Primary Cascade Classifier:
 % Splits the signal into the classification of NSR and AFib or Too Noisy
 % and Other. 
-predicted_labelsS1 = trainedClassifier.predictFcnL1(FeatureVector(L1_Ind));
+Primary_Label = trainedClassifier.predictFcnL1(FeatureVector(PrimaryClassifier_FeatureIndex));
 
-%%%Cascade level two A: NSR or AFib
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if(predicted_labelsS1 == 0)
-    
-    predicted_labelsS3 = trainedClassifier.predictFcnL3(FeatureVector(L3_ind));
-    if( predicted_labelsS3 == 1)
-        PredictedAnnotation = 1;
-    end
-    if ( predicted_labelsS3 == 0)
-        PredictedAnnotation = 3;
-    end
-end
-%%%Cascade level two B: Too Noisy or Other
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if(predicted_labelsS1 == 1)
-    predicted_labelsS2 = trainedClassifier.predictFcnL2(FeatureVector(L2_ind));
-    if( predicted_labelsS2 == 1)
-        PredictedAnnotation = 0;
-    end
-    if( predicted_labelsS2 == 0)
-        PredictedAnnotation = 2;
-    end
-end
+    %Secondary Cascade Classifier A: NSR or AF
+    if(Primary_Label == 0)
+        Secondary_Label_A = trainedClassifier.predictFcnL3(FeatureVector(SecondaryClassifierB_FeatureIndex));
+        if( Secondary_Label_A == 1)
+            PredictedLabel = 1;
+        end
+        if ( Secondary_Label_A == 0)
+            PredictedLabel = 3;
+        end
 
+    %Secondary Cascade Classifier B: Too Noisy or Other
+    elseif(Primary_Label == 1)
+        Secondary_Label_B = trainedClassifier.predictFcnL2(FeatureVector(SecondaryClassifierA_FeatureIndex));
+        if( Secondary_Label_B == 1)
+            PredictedLabel = 0;
+        end
+        if( Secondary_Label_B == 0)
+            PredictedLabel = 2;
+        end
+    end
 
 end
 
