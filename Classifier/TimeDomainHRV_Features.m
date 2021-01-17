@@ -1,4 +1,4 @@
-function [features] = soa_features(ecg, fs, qrs)
+function [features] = TimeDomainHRV_Features(ecg, fs, qrs)
 
 RR = diff(qrs')/fs;
 
@@ -7,18 +7,15 @@ if length(qrs) < 6
     return
 end
 
-mean_RR = mean(RR); % feature 4
+mean_RR = mean(RR); 
+mad_RR = mad(RR); % median absolute deviation of RR
 RMSSD = sqrt(mean(diff(RR).^2));% root mean square of successive differences
-nRMSSD = RMSSD/mean_RR; % feature 1
-
-% Meadian Absolute Deviation of RR
-mad_RR = mad(RR); % feature 3
+nRMSSD = RMSSD/mean_RR; % normalized RMS of successive differences
 
 %PSD 
 PSD_Distribution = PSD_Welch(qrs, 2, length(ecg), fs);
 
 features = [nRMSSD mad_RR PSD_Distribution];
-
 end
 
 function [ hrv ] = PSD_Welch( m, Fs, len,fs )

@@ -1,3 +1,4 @@
+
 function [ratio] = calculateSNR(waveletOutput, peakPosition, Fs)
 %CALCULATE a number indicating the noise level in the signal around the
 %last found peak position.
@@ -10,7 +11,7 @@ function [ratio] = calculateSNR(waveletOutput, peakPosition, Fs)
 % (3) Department of Personal Health Solutions, Philips Research, Eindhoven
 % GNU GENERAL PUBLIC LICENSE
 
-    DEBUG = false;
+    DEBUG = true;
     
     DELTA       = round(0.075*Fs);
     isoWidth    = round(0.175*Fs);%0.1

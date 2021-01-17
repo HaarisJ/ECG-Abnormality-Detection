@@ -42,7 +42,7 @@ Features_Freq = [Features_Freq Frequency_Feats(ecg, fs)];
 Features_ADC = pr( R_Wave_Index, P_Wave_Index);
 feat_ind = 1:27;
 Features_statistical = Statistical_Feats(raw_ecg, fs, feat_ind);
-Features_soa = soa_features(ecg, fs, R_Wave_Index);
+Features_soa = TimeDomainHRV_Features(ecg, fs, R_Wave_Index);
 features_HRV = Heart_Rate_Variability_Features(ecg, fs, R_Wave_Index); 
 
 all_features = [Features_SD Features_Freq Features_ADC Features_soa Features_statistical features_HRV Features_Physiological];

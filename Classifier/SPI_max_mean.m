@@ -2,7 +2,7 @@ function[FEATURES]= SPI_max_mean(ECG,Fs)
 % Sibylle Fallet
 % Sasan Yazdani
 % Jean-Marc Vesin
-% GNU GEneral public License
+% GNU General public License
 
 %% Data cleaning and preparation
 fs2 = 35; % Waveforms are resampled at 15 Hz prior to adaptive frequency tracking

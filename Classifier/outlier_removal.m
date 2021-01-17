@@ -1,21 +1,18 @@
 function [Y, ind]  = outlier_removal( X, factor )
 
-%ind=[];
-hlim = mean(X) + factor*std(X);
-llim = mean(X) - factor*std(X);
 
-ind1=find(X>hlim);
-ind2=find(X<llim);
-%ind=[ind ind1 ind2];
-%ind=sort(ind);
-if iscolumn(ind1) && iscolumn(ind2)
-    ind=sort([ind1;ind2]);
-else
-    ind=sort([ind1 ind2]);
+Upperlim = mean(X) + factor*std(X);
+Lowerlim = mean(X) - factor*std(X);
+
+UpperOutliers_Locs=find(X>Upperlim);
+LowerOutliers_Locs=find(X<Lowerlim);
+
+try
+    ind=sort([UpperOutliers_Locs;LowerOutliers_Locs]);
+catch
+    ind=sort([UpperOutliers_Locs LowerOutliers_Locs]);
 end
 
-X = X(X < hlim & X >llim);
-
-Y=X;
+Y = X(X < Upperlim & X >Lowerlim);
 end
 

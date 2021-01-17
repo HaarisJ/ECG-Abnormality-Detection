@@ -11,7 +11,7 @@ ecg1 = Butterworth_LPF(ecg,2,10,Fs);
 ecg1 = Butterworth_HPF(ecg1,2,0.5,Fs);
 ecg=zscore(ecg1(:));
 %% FFT Coeffs%%
-[FFTCoefficients,f] = FFT_Function(ecg,Fs);
+[FFTCoefficients,f] = FFT_Coefficients(ecg,Fs);
 
 %% %%%%Features%%%%%% %%
 features3=[];
@@ -59,7 +59,7 @@ if(ismember(6,FeatureIndices))
 end
 
 %% SNR %%
-if(ismember(7,FeatureIndices))%16
+if(ismember(7,FeatureIndices))
     Noise = snr(ecg,Fs);
     features3=[features3 Noise];
 end
@@ -102,7 +102,7 @@ if(ismember(11,FeatureIndices))
     if (floor(length(ecg)/FrameSize)>1)
         for Count = 1:floor(length(ecg)/FrameSize)
             clippedData = DataTrimmed(FrameSize*(Count-1)+1:FrameSize*Count);
-            [Coeff_CD,f_CD] = FFT_Function(clippedData,1000);
+            [Coeff_CD,f_CD] = FFT_Coefficients(clippedData,1000);
             Cr(Count) = sum(Coeff_CD.*f_CD')/sum(abs(Coeff_CD));
         end
         Cr = mean(Cr); %11
@@ -110,7 +110,7 @@ if(ismember(11,FeatureIndices))
     else
         Count = 1;
         clippedData = DataTrimmed;
-        [Coeff_CD,f_CD] = FFT_Function(clippedData,1000);
+        [Coeff_CD,f_CD] = FFT_Coefficients(clippedData,1000);
         Cr(Count) = sum(Coeff_CD.*f_CD')/sum(abs(Coeff_CD));
         Cr = mean(Cr); %11
         features3=[features3 Cr];
@@ -122,7 +122,7 @@ if(ismember(12,FeatureIndices))
     if (floor(length(ecg)/FrameSize)>1)
         for Count = 1:floor(length(ecg)/FrameSize)
             clippedData = DataTrimmed(FrameSize*(Count-1)+1:FrameSize*Count);
-            [Coeff_CD,~] = FFT_Function(clippedData,1000);
+            [Coeff_CD,~] = FFT_Coefficients(clippedData,1000);
             Energy85P = 0.85*sum(abs(Coeff_CD));
             CumSumCoeff = cumsum(Coeff_CD);
             RrIndex = find(CumSumCoeff>Energy85P);
@@ -133,7 +133,7 @@ if(ismember(12,FeatureIndices))
     else
         Count = 1;
         clippedData = DataTrimmed;
-        [Coeff_CD,~] = FFT_Function(clippedData,1000);
+        [Coeff_CD,~] = FFT_Coefficients(clippedData,1000);
         Energy85P = 0.85*sum(abs(Coeff_CD));
         CumSumCoeff = cumsum(Coeff_CD);
         RrIndex = find(CumSumCoeff>Energy85P);
@@ -149,8 +149,8 @@ if(ismember(13,FeatureIndices))
         for Count = 1:floor(length(ecg)/FrameSize)-1
             clippedData = DataTrimmed(FrameSize*(Count-1)+1:FrameSize*Count);
             clippedDataNext = DataTrimmed(FrameSize*(Count)+1:FrameSize*(Count+1));
-            [Coeff_CD,~] = FFT_Function(clippedData,1000);
-            [Coeff_CDNext,~] = FFT_Function(clippedDataNext,1000);
+            [Coeff_CD,~] = FFT_Coefficients(clippedData,1000);
+            [Coeff_CDNext,~] = FFT_Coefficients(clippedDataNext,1000);
             Fr(Count) = sum((Coeff_CDNext - Coeff_CD).^2);
         end
         Fr = mean(Fr); %13
@@ -159,8 +159,8 @@ if(ismember(13,FeatureIndices))
         Count = 1;
         clippedData = DataTrimmed;
         clippedDataNext = DataTrimmed;
-        [Coeff_CD,~] = FFT_Function(clippedData,1000);
-        [Coeff_CDNext,~] = FFT_Function(clippedDataNext,1000);
+        [Coeff_CD,~] = FFT_Coefficients(clippedData,1000);
+        [Coeff_CDNext,~] = FFT_Coefficients(clippedDataNext,1000);
         Fr(Count) = sum((Coeff_CDNext - Coeff_CD).^2);
         Fr = mean(Fr); %13
         features3=[features3 Fr];
@@ -245,7 +245,7 @@ if(ismember(20,FeatureIndices)||ismember(21,FeatureIndices)||ismember(22,Feature
         end
         %         plot(data);hold all;plot(s_idx,data(s_idx),'.r');
         %         keyboard;
-        [Coeffnew,fnew] = FFT_Function(data(s_idx),Fs);
+        [Coeffnew,fnew] = FFT_Coefficients(data(s_idx),Fs);
         [~,ind1] = sort(Coeffnew,'descend');
         feat23=fnew(ind1(1));
         

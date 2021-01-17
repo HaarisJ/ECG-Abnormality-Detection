@@ -18,9 +18,9 @@ end
 % find locations where p = 0; the p needs to be removed in those
 % cases. This is done to bypass NaN situations
 p = p(p~=0)/N;
-Shannon = -1*sum(p.*log(p));                                
-Tsallis = sum(1 - p.^2);
-Renyi = log(sum(p.^2)); 
+Shannon = -1*sum(p.*log(p)); %http://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf                                
+Tsallis = sum(1 - p.^2); %https://www.researchgate.net/publication/226805234_Possible_generalization_of_Boltzmann-Gibbs_statistics
+Renyi = log(sum(p.^2));  %https://www.mdpi.com/1099-4300/20/11/813/pdf
                      
 %% Combining all 3 entropy values into single array
 STR_Array = [Shannon Tsallis Renyi];

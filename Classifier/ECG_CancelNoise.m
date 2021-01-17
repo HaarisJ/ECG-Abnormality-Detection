@@ -14,7 +14,7 @@ function [ new_ecg ] = ECG_CancelNoise( ecg, fs )
     % find consecutive numbers as pairs
     p=find(diff(g1)==1); % 1 x m
     q=[p;p+1]; % 2 x m
-    n1 = g1(q);  % 2 x m,this plot gives all the pairs of consecutive numbers
+    n1 = g1(q);  % 2 x m, this plot gives all the pairs of consecutive numbers
     rows = size(n1);
     if(rows~=2)
         n1 = n1';

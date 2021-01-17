@@ -19,7 +19,7 @@ if mean(amp) < 0 && median(amp) < 0
     ecg = -ecg;
 end
 
-%% P, Q, S, T Detection
+%% Q, S, T Detection
 ecg_f = Butterworth_BPF( ecg );
 
 % Detect Q and S and T waves
