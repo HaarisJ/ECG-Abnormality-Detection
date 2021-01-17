@@ -33,7 +33,7 @@ raw_ecg = ecg;
 [P_Wave_Index, Q_Wave_Index, R_Wave_Index, S_Wave_Index, T_Wave_Index] = ECG_Point_Extract( ecg, fs );
 
 % ECG features
-[Features_SD,Features_Physiological] = ECG_Feature_Extraction(ecg, fs, P_Wave_Index, Q_Wave_Index, R_Wave_Index, S_Wave_Index, T_Wave_Index);
+[Features_SD, Features_Physiological] = ECG_Feature_Extraction(ecg, fs, P_Wave_Index, Q_Wave_Index, R_Wave_Index, S_Wave_Index, T_Wave_Index);
 if length(Features_SD) == 1
     Features_SD = zeros(1,68);
 end

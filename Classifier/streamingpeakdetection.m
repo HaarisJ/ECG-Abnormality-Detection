@@ -136,7 +136,8 @@ function [out] = streamingpeakdetection(inputData, Fs, HRLimits, PLOT, Fc, block
         [peakPosition, thresholdValue] = rpeakdetection(waveletOutput, thresholdValue, ratio, minThresholdValue, g.RR_MIN);
         
         
-        if isnan(peakPosition); ratio = g.BASE_RATIO;
+        if isnan(peakPosition); 
+            ratio = g.BASE_RATIO;
         else
             [ratio] = calculateSNR(abs(waveletOutput), peakPosition, Fs);
             wavelet_mean = mean(waveletOutput);

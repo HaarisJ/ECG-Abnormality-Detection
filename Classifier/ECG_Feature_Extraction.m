@@ -1,9 +1,10 @@
-function [features1,features2] = ECG_Feature_Extraction(ecg, fs, P_Wave_Index, Q_Wave_Index, R_Wave_Index, S_Wave_Index, T_Wave_Index)
+function [Features_SD,Features_Physiological] = ECG_Feature_Extraction(ecg, fs, P_Wave_Index, Q_Wave_Index, R_Wave_Index, S_Wave_Index, T_Wave_Index)
 
 % If ECG length is too short - cancel running script - too short to do
 % proper analysis
 if (length(R_Wave_Index) < 6 || isempty(Q_Wave_Index) || isempty(S_Wave_Index) || isempty(T_Wave_Index)) 
-    features1 = 0;
+    Features_SD = 0;
+    [Features_Physiological] = Physiological_Feats(ecg,fs);
     return
 end
 
@@ -306,10 +307,24 @@ ECG_SignalFeats = [rs1 rs2 rs3 med_st var_st num_neg_st deep_s inflec_dist_s tr_
     Q1 Q2 Q3 Q4 rq1 rq2 rq3 SR1 SR2 median_QR variance_QR median_RS variance_RS median_SJ variance_SJ ...
     cQTB_Median cQTB_Variance cQTF_Median cQTF_Variance cQTS_Median cQTS_Variance];
 
+[Features_Physiological] = Physiological_Feats(ecg,fs);
 
+%% Final Features Extracted
+Features_SD = [SoAFeats StatisticalFeats W_Entropy Hjorth_Mobility Hjorth_Complexity PDE_Features AmplitudeFeats ECG_SignalFeats HRV_Feats];
+Features_Physiological;
+end
+
+
+
+function [Features_Physiological] = Physiological_Feats(ecg,fs)
+ecg_data=resample(ecg,250,fs);
+Fs=250;
 %% Peak Counts
 try
     [Peak_Count] = get_fv(ecg_data,Fs); %2
+    if(isempty(Peak_Count))
+        Peak_Count=zeros(1,2);
+    end
 catch
     Peak_Count=zeros(1,2);
 end
@@ -317,6 +332,9 @@ end
 %% Cross Correlation Features Using Periodogram
 try
     [xcorr_PSD_Feats] = Cross_Correlation_Feats(ecg_data,Fs); %1*10 Feature : 12
+    if(isempty(xcorr_PSD_Feats))
+        xcorr_PSD_Feats=zeros(1,10);
+    end
 catch
     xcorr_PSD_Feats=zeros(1,10);
 end
@@ -324,6 +342,12 @@ end
 %% Max and Min BPM
 try
     [Max_BPM,Min_BPM] = BPM_Calc(ecg_data,Fs); %13
+    if(isempty(Max_BPM))
+        Max_BPM=0;
+    end
+    if(isempty(Min_BPM))
+        Min_BPM=0;
+    end
 catch
     Max_BPM = 0;
     Min_BPM=0;
@@ -332,6 +356,9 @@ end
 %% Signal Purity Index Max and Mean
 try
     [SPI_Max_Mean]= SPI_max_mean(ecg_data,Fs); %16
+    if(isempty(SPI_Max_Mean))
+        SPI_Max_Mean=zeros(1,2);
+    end
 catch
     SPI_Max_Mean=zeros(1,2);
 end
@@ -339,6 +366,9 @@ end
 %% RR Interval
 try
     [RR_Int]= RR_Interval_Calc(ecg_data,Fs);%17
+    if(isempty(RR_Int))
+        RR_Int=0;
+    end
 catch
     RR_Int=0;
 end
@@ -346,6 +376,12 @@ end
 %% Signal Quality Index Features
 try
     [SQI_Feats, f10,peaks1,ecg1,fs] = ECG_SqiFeatures(ecg_data,Fs); % 6 Features %25
+    if(isempty(SQI_Feats))
+        SQI_Feats=zeros(1,6);
+    end
+    if(isempty(f10))
+        f10=0;
+    end
 catch
     SQI_Feats=zeros(1,6);
     f10=0;
@@ -354,13 +390,14 @@ end
 %% Heart Rate Features
 try
     [HR_Feats] = Heart_Rate_Features(length(ecg1),peaks1,length(ecg1),fs, 0);%31
+    if(isempty(HR_Feats))
+        HR_Feats=zeros(1,6);
+    end
 catch
     HR_Feats=zeros(1,6);
 end
 
-%% Final Features Extracted
-features1 = [SoAFeats StatisticalFeats W_Entropy Hjorth_Mobility Hjorth_Complexity PDE_Features AmplitudeFeats ECG_SignalFeats HRV_Feats];
-features2 =[Peak_Count xcorr_PSD_Feats Max_BPM Min_BPM SPI_Max_Mean RR_Int SQI_Feats f10 HR_Feats];
+Features_Physiological = [Peak_Count xcorr_PSD_Feats Max_BPM Min_BPM SPI_Max_Mean RR_Int SQI_Feats f10 HR_Feats];
 
 end
 

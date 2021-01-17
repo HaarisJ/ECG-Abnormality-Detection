@@ -22,7 +22,7 @@ load BoostS1
 load BoostS2 
 load BoostS3
 
-for i=560:580
+for i=1:N
     fs = testSet.Freq{i};
     trueLabel = testSet.Labels{i};
     ecgData = testSet.Data(i,:)';
