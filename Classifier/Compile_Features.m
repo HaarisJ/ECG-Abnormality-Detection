@@ -1,24 +1,5 @@
 function all_features = Compile_Features(ecg, fs)
-% function all_features = Compile_Features(recordName)
-
-%
-% Sample entry for the 2017 PhysioNet/CinC Challenge.
-%
-% INPUTS:
-% recordName: string specifying the record name to process
-%
-% OUTPUTS:
-% classifyResult: integer value where
-%                     N = normal rhythm
-%                     A = AF
-%                     O = other rhythm
-%                     ~ = noisy recording (poor signal quality)
-%
-% classifyResult = 'N'; % default output normal rhythm
-% read the filename
-% May need to suppress warnings
 warning('off','all')
-% [tm,ecg,fs,siginfo]=rdmat(recordName);
 
 % if length of ecg is under 400 - cant execute this function 
 if length(ecg) < 400
@@ -42,10 +23,10 @@ Features_Freq = [Features_Freq Frequency_Feats(ecg, fs)];
 Features_ADC = pr( R_Wave_Index, P_Wave_Index);
 feat_ind = 1:27;
 Features_statistical = Statistical_Feats(raw_ecg, fs, feat_ind);
-Features_soa = TimeDomainHRV_Features(ecg, fs, R_Wave_Index);
+Features_TDHRV = TimeDomainHRV_Features(ecg, fs, R_Wave_Index);
 features_HRV = Heart_Rate_Variability_Features(ecg, fs, R_Wave_Index); 
 
-all_features = [Features_SD Features_Freq Features_ADC Features_soa Features_statistical features_HRV Features_Physiological];
+all_features = [Features_SD Features_Freq Features_ADC Features_TDHRV Features_statistical features_HRV Features_Physiological];
 
 % Need to add NaN and Inf handling
 load MeanVector
