@@ -8,11 +8,11 @@
 % trainSet.Labels = trainSet.Labels(1345:1365,1);
 
 addpath 'D:\QueensU\Year 4\ELEC 490'
-testSet = load('testSet.mat').testSet;
+testSet = load('testSet_MATLAB.mat').testSet;
 testSet.Data = testSet.Data(:,1:2500);
 testSet.Labels = testSet.Labels(:,1);
 
-N = 600;
+N = 602;
 predictions = string(zeros(1, N));
 labels = string(zeros(1, N));
 err = 0;
@@ -22,7 +22,7 @@ load AdaBoostPrimary
 load AdaBoostSecondaryA
 load AdaBoostSecondaryB
 
-for i=1:N
+for i=480:500
     fs = testSet.Freq{i};
     trueLabel = testSet.Labels{i};
     ecgData = testSet.Data(i,:)';
@@ -47,6 +47,7 @@ for i=1:N
     
     predictions(i) = classifyResult;
     labels(i) = trueLabel;
+    
 end
 
 for i = 1:length(predictions)

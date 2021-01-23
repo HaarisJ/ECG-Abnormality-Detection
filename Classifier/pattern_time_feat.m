@@ -31,10 +31,10 @@ end
 
 a=duo(:,2)-duo(:,1);
 xvalues = unique(a);
-[x,y]=hist(a,xvalues); %#ok<HIST>
-xa=x./sum(x);
-t1=find(y<11/300*Fs,1,'first');
-t2=find(y>=11/300*Fs,1,'first');
+[num_elems,bin_centre]=hist(a,xvalues); %#ok<HIST>
+xa=num_elems./sum(num_elems);
+t1=find(bin_centre<11/300*Fs,1,'first');
+t2=find(bin_centre>=11/300*Fs,1,'first');
 
 time_domain_rand_feat1 = sum(xa(1:t1));
 time_domain_rand_feat2 = sum(xa(t2:end));

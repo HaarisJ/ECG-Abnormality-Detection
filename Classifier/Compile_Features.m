@@ -22,8 +22,8 @@ Features_Freq = STR_Entropy_Features(ecg);
 Features_Freq = [Features_Freq Frequency_Feats(ecg, fs)];
 Features_ADC = pr( R_Wave_Index, P_Wave_Index);
 feat_ind = 1:27;
-Features_statistical = Statistical_Feats(raw_ecg, fs, feat_ind);
 Features_TDHRV = TimeDomainHRV_Features(ecg, fs, R_Wave_Index);
+Features_statistical = Statistical_Feats(raw_ecg, fs, feat_ind);
 features_HRV = Heart_Rate_Variability_Features(ecg, fs, R_Wave_Index); 
 
 all_features = [Features_SD Features_Freq Features_ADC Features_TDHRV Features_statistical features_HRV Features_Physiological];

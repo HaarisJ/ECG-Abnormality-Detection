@@ -43,18 +43,18 @@ end
 if(ismember(4,FeatureIndices))
     i1 = find(f<0.5,1,'last');
     i2 = find(f>5,1,'first');
-    KurtosisFreqDom = kurtosis(FFTCoefficients(i1:i2)); %4
+    KurtosisFreqDom = kurtosis(FFTCoefficients(i1:i2))
     features3=[features3 KurtosisFreqDom];
 end
 
 %% Kurtosis of time series data%%%
 if(ismember(5,FeatureIndices))
-    KurtosisTimeDom = kurtosis(ecg); %5
+    KurtosisTimeDom = kurtosis(ecg);
     features3=[features3 KurtosisTimeDom];
 end
 %% Hjorth parameters%
 if(ismember(6,FeatureIndices))
-    [~, ~, COMPLEXITY] = hjorth_cp(ecg); %6
+    [~, ~, COMPLEXITY] = hjorth_cp(ecg);
     features3=[features3 COMPLEXITY];
 end
 
@@ -65,7 +65,7 @@ if(ismember(7,FeatureIndices))
 end
 %% Total Harmonic Distortion (THD)
 if(ismember(8,FeatureIndices))
-    TDH = thd(ecg); %8
+    TDH = thd(ecg); 
     features3=[features3 TDH];
 end
 
@@ -75,7 +75,7 @@ if(ismember(9,FeatureIndices))
     vect2 = ecg(2:end);
     vect = vect1.*vect2;
     VectInd = find(vect<0);
-    ZCR = length(VectInd)/(length(ecg)-1); %9
+    ZCR = length(VectInd)/(length(ecg)-1); 
     features3=[features3 ZCR];
 end
 
@@ -88,11 +88,11 @@ if(ismember(10,FeatureIndices))
         for Count = 1:floor(length(ecg)/FrameSize)
             Er(Count) = sum(DataTrimmed(FrameSize*(Count -1)+1:FrameSize*Count).^2)/FrameSize;
         end
-        Er = mean(Er); %10
+        Er = mean(Er);
         features3=[features3 Er];
     else
         Er = sum(DataTrimmed.^2)/FrameSize;
-        Er = mean(Er); %10
+        Er = mean(Er); 
         features3=[features3 Er];
     end
 end
@@ -105,7 +105,7 @@ if(ismember(11,FeatureIndices))
             [Coeff_CD,f_CD] = FFT_Coefficients(clippedData,1000);
             Cr(Count) = sum(Coeff_CD.*f_CD')/sum(abs(Coeff_CD));
         end
-        Cr = mean(Cr); %11
+        Cr = mean(Cr); 
         features3=[features3 Cr];
     else
         Count = 1;
@@ -128,7 +128,7 @@ if(ismember(12,FeatureIndices))
             RrIndex = find(CumSumCoeff>Energy85P);
             RrInd(Count) = min(RrIndex);
         end
-        Rr = mean(RrInd); %12
+        Rr = mean(RrInd); 
         features3=[features3 Rr];
     else
         Count = 1;
@@ -153,7 +153,7 @@ if(ismember(13,FeatureIndices))
             [Coeff_CDNext,~] = FFT_Coefficients(clippedDataNext,1000);
             Fr(Count) = sum((Coeff_CDNext - Coeff_CD).^2);
         end
-        Fr = mean(Fr); %13
+        Fr = mean(Fr); 
         features3=[features3 Fr];
     else
         Count = 1;
@@ -162,17 +162,17 @@ if(ismember(13,FeatureIndices))
         [Coeff_CD,~] = FFT_Coefficients(clippedData,1000);
         [Coeff_CDNext,~] = FFT_Coefficients(clippedDataNext,1000);
         Fr(Count) = sum((Coeff_CDNext - Coeff_CD).^2);
-        Fr = mean(Fr); %13
+        Fr = mean(Fr); 
         features3=[features3 Fr];
     end
 end
-%% TIme Domain pattern based
+%% TIme Domain based pattern 
 here = pattern_time_feat(ecg,Fs);
-if(ismember(14,FeatureIndices))%14
+if(ismember(14,FeatureIndices))
     features3=[features3 here(1)];
 end
 
-if(ismember(15,FeatureIndices))%15
+if(ismember(15,FeatureIndices))
     features3=[features3 here(2)];
 end
 
