@@ -1,7 +1,7 @@
 %% Load in the trained ML Model and initialization of variables
-load BoostS1 
-load BoostS2 
-load BoostS3
+load AdaBoostPrimary
+load AdaBoostSecondaryA
+load AdaBoostSecondaryB
 
 ECG_Results = table('Size', [1,2], 'VariableNames',{'id', 'label'}, ...
 'VariableTypes', {'int8','string'}); % Table to store the final result

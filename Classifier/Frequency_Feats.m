@@ -54,13 +54,10 @@ level = 5;
 %det4 = detcoef(c,l,level-1);
 det3 = detcoef(c,l,level-2);
 %--------------------------------------------------------------------------
-f7 = log2(var(det3));                                       %7
-%--------------------------------------------------------------------------
-% xx = downsample(ecg, 8);
-% [f14, ~, f15] = Spectral(xx);                               %13 14
+log_det3_var = log2(var(det3));                                      
 %--------------------------------------------------------------------------
 [lp,~] = lpc(double(ecg),10);
-f161821232425 = lp([2 4 7 9 10 11]);                        %16 18 21 23 24 25
+lp_2_4_7_9_10_11 = lp([2 4 7 9 10 11]);                       
 %--------------------------------------------------------------------------
 N = length(ecg);
 xdft = fft(ecg);
@@ -72,7 +69,7 @@ psdx = (1/(2*pi*N)) * abs(xdft).^2;
 psdx(2:end-1) = 2*psdx(2:end-1);
 
 f = fs*(0:(N/2))/N;
-frequency_centroid = (sum(f'.*(psdx.^2)))/(sum(psdx.^2));   %26
+frequency_centroid = (sum(f'.*(psdx.^2)))/(sum(psdx.^2));   
 
-F = [window_spec_mean f7 f161821232425 frequency_centroid];
+F = [window_spec_mean log_det3_var lp_2_4_7_9_10_11 frequency_centroid];
     end

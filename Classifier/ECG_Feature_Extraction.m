@@ -157,11 +157,11 @@ end
 if ~isempty(slope_ST)
     med_st = median(slope_ST);
     var_st = std(slope_ST)/mean(slope_ST);
-    num_neg_st = length(find(slope_ST<0))/length(QRS);
+    length_neg_st = length(find(slope_ST<0))/length(QRS);
 else
     med_st = 0;
     var_st = 0;
-    num_neg_st = 0;
+    length_neg_st = 0;
 end
 
 % Crossing of ST segment w.r.t. baseline
@@ -303,7 +303,7 @@ cQTF_Variance = std(corrected_QT_Fridericia)/mean(corrected_QT_Fridericia);
 cQTS_Median = median(corrected_QT_Sagie); 
 cQTS_Variance = std(corrected_QT_Sagie)/mean(corrected_QT_Sagie);
 
-ECG_SignalFeats = [rs1 rs2 rs3 med_st var_st num_neg_st deep_s inflec_dist_s tr_amp PR_ratio ...
+ECG_SignalFeats = [rs1 rs2 rs3 med_st var_st length_neg_st deep_s inflec_dist_s tr_amp PR_ratio ...
     Q1 Q2 Q3 Q4 rq1 rq2 rq3 SR1 SR2 median_QR variance_QR median_RS variance_RS median_SJ variance_SJ ...
     cQTB_Median cQTB_Variance cQTF_Median cQTF_Variance cQTS_Median cQTS_Variance];
 
