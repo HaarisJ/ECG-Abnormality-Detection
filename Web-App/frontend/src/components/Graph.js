@@ -2,9 +2,9 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 const Graph = (props) => {
-  const xlabs = new Array(2000);
+  const xlabs = new Array(2500);
   for (let i = 0; i < xlabs.length; i++) {
-    let num = 0.2 * i;
+    let num = i / 300;
     xlabs[i] = num.toFixed(1);
   }
 

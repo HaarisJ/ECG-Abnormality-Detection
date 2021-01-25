@@ -1,16 +1,47 @@
 import { useState } from "react";
 
 const TSTable = (props) => {
-  const [tableState, setTableState] = useState(0);
-
   return (
     <div>
       <h4>Testset Results</h4>
+      <div className="btn-group container">
+        <button
+          className={
+            props.tab === 0
+              ? "btn btn-outline-success active"
+              : "btn btn-outline-success"
+          }
+          onClick={() => props.changeClass(0)}
+        >
+          Normal
+        </button>
+
+        <button
+          className={
+            props.tab === 1
+              ? "btn btn-outline-danger active"
+              : "btn btn-outline-danger"
+          }
+          onClick={() => props.changeClass(1)}
+        >
+          Abnormal
+        </button>
+        <button
+          className={
+            props.tab === 2
+              ? "btn btn-outline-warning active"
+              : "btn btn-outline-warning"
+          }
+          onClick={() => props.changeClass(2)}
+        >
+          Noisy
+        </button>
+      </div>
       <div
         className="table-container"
-        style={{ height: "300px", overflow: "auto" }}
+        style={{ height: "400px", overflow: "auto", margin: "10px 10px 100px" }}
       >
-        <table className="table table-striped table-hover table-sm">
+        <table className="table table-hover table-sm">
           <thead>
             <tr>
               <th>#</th>
@@ -22,7 +53,7 @@ const TSTable = (props) => {
             {props.entries.map((item) => {
               const prediction = item.label;
               const truth = item.true_lab;
-              if (prediction === "NSR" && truth === "NSR\r")
+              if (prediction === "NSR" && truth === "NSR\r" && props.tab === 0)
                 return (
                   <tr
                     className=""
@@ -33,7 +64,11 @@ const TSTable = (props) => {
                     <td>Normal</td>
                   </tr>
                 );
-              if (prediction === "NSR" && truth === "Other\r")
+              if (
+                prediction === "NSR" &&
+                truth === "Other\r" &&
+                props.tab === 0
+              )
                 return (
                   <tr
                     className="table-danger"
@@ -44,7 +79,11 @@ const TSTable = (props) => {
                     <td>Irregular</td>
                   </tr>
                 );
-              if (prediction === "NSR" && truth === "Noisy\r")
+              if (
+                prediction === "NSR" &&
+                truth === "Noisy\r" &&
+                props.tab === 0
+              )
                 return (
                   <tr
                     className="table-danger"
@@ -55,40 +94,56 @@ const TSTable = (props) => {
                     <td>Noisy</td>
                   </tr>
                 );
-              if (prediction === "Other" && truth === "Other\r")
+              if (
+                prediction === "Other" &&
+                truth === "Other\r" &&
+                props.tab === 1
+              )
                 return (
                   <tr
                     className=""
                     onClick={() => props.click(item.id, "Abnormal", "Abnormal")}
                   >
                     <td>{item.id}</td>
-                    <td>Irregular</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
+                    <td>Abnormal</td>
                   </tr>
                 );
-              if (prediction === "Other" && truth === "NSR\r")
+              if (
+                prediction === "Other" &&
+                truth === "NSR\r" &&
+                props.tab === 1
+              )
                 return (
                   <tr
                     className="table-danger"
                     onClick={() => props.click(item.id, "Abnormal", "Normal")}
                   >
                     <td>{item.id}</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
                     <td>Normal</td>
                   </tr>
                 );
-              if (prediction === "Other" && truth === "Noisy\r")
+              if (
+                prediction === "Other" &&
+                truth === "Noisy\r" &&
+                props.tab === 1
+              )
                 return (
                   <tr
-                    className="bg-danger"
+                    className="table-danger"
                     onClick={() => props.click(item.id, "Abnormal", "Noisy")}
                   >
                     <td>{item.id}</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
                     <td>Noisy</td>
                   </tr>
                 );
-              if (prediction === "Noisy" && truth === "Noisy\r")
+              if (
+                prediction === "Noisy" &&
+                truth === "Noisy\r" &&
+                props.tab === 2
+              )
                 return (
                   <tr
                     className=""
@@ -99,10 +154,14 @@ const TSTable = (props) => {
                     <td>Noisy</td>
                   </tr>
                 );
-              if (prediction === "Noisy" && truth === "NSR\r")
+              if (
+                prediction === "Noisy" &&
+                truth === "NSR\r" &&
+                props.tab === 2
+              )
                 return (
                   <tr
-                    className="bg-danger"
+                    className="table-danger"
                     onClick={() => props.click(item.id, "Noisy", "Normal")}
                   >
                     <td>{item.id}</td>
@@ -110,24 +169,21 @@ const TSTable = (props) => {
                     <td>Normal</td>
                   </tr>
                 );
-              if (prediction === "Noisy" && truth === "Other\r")
+              if (
+                prediction === "Noisy" &&
+                truth === "Other\r" &&
+                props.tab === 2
+              )
                 return (
                   <tr
-                    className="bg-danger"
+                    className="table-danger"
                     onClick={() => props.click(item.id, "Noisy", "Abnormal")}
                   >
                     <td>{item.id}</td>
                     <td>Noisy</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
                   </tr>
                 );
-              return (
-                <tr className="table-primary">
-                  <td>{item.id}</td>
-                  <td>{prediction}</td>
-                  <td>{truth}</td>
-                </tr>
-              );
             })}
           </tbody>
         </table>

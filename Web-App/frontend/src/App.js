@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
 
 import "./App.css";
 import Graph from "./components/Graph";
@@ -19,9 +20,11 @@ const App = () => {
   const [rsTableEntries, setRsTableEntries] = useState([]);
   const [ecgState, setEcgState] = useState({ predict: "", truth: "" });
   const [appStatus, setAppStatus] = useState("Waiting for new data");
+  const [selectedClass, setSelectedClass] = useState(0);
 
+  // SETUP
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTsData = async () => {
       try {
         const res = await FetchECGData.get("/testset");
         setTsTableEntries(res.data.data);
@@ -30,7 +33,17 @@ const App = () => {
         console.log(err);
       }
     };
-    fetchData();
+    const fetchRsData = async () => {
+      try {
+        const res = await FetchECGData.get("/realset");
+        setRsTableEntries(res.data.data);
+        // console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchTsData();
+    fetchRsData();
   }, []);
 
   const realtimeBtnHandler = () => {
@@ -53,11 +66,21 @@ const App = () => {
     }
   };
 
+  const tableClassHandler = (classInput) => {
+    setSelectedClass(classInput);
+  };
+
   const table = tsFlag ? (
-    <TSTable entries={tsTableEntries} click={onRowClick} />
+    <TSTable
+      entries={tsTableEntries}
+      click={onRowClick}
+      tab={selectedClass}
+      changeClass={tableClassHandler}
+    />
   ) : (
-    <RSTable />
+    <RSTable entries={tsTableEntries} click={onRowClick} />
   );
+
   const statusIndicators = !tsFlag ? (
     <div>
       <h5 className="text-justify">
@@ -93,38 +116,40 @@ const App = () => {
   );
 
   return (
-    <div className="App container-sm">
-      <h1>ECG Abnormality Detection</h1>
-      <div className="btn-group">
-        <button
-          className={
-            tsFlag
-              ? "btn btn-outline-primary"
-              : "btn btn-outline-primary active"
-          }
-          onClick={realtimeBtnHandler}
-        >
-          Realtime
-        </button>
+    <BrowserRouter>
+      <div className="App container-sm">
+        <h1>ECG Abnormality Detection</h1>
+        <div className="btn-group">
+          <button
+            className={
+              tsFlag
+                ? "btn btn-outline-primary"
+                : "btn btn-outline-primary active"
+            }
+            onClick={realtimeBtnHandler}
+          >
+            Realtime
+          </button>
 
-        <button
-          className={
-            tsFlag
-              ? "btn btn-outline-primary active"
-              : "btn btn-outline-primary"
-          }
-          onClick={testsetBtnHandler}
-        >
-          Testset
-        </button>
+          <button
+            className={
+              tsFlag
+                ? "btn btn-outline-primary active"
+                : "btn btn-outline-primary"
+            }
+            onClick={testsetBtnHandler}
+          >
+            Testset
+          </button>
+        </div>
+        {statusIndicators}
+        <Graph vals={graphData} />
+        <div className="row">
+          <div className="col-md-4">{table}</div>
+          <div className="col-md-8"></div>
+        </div>
       </div>
-      {statusIndicators}
-      <Graph vals={graphData} />
-      <div className="row">
-        <div className="col-md-4">{table}</div>
-        <div className="col-md-8"></div>
-      </div>
-    </div>
+    </BrowserRouter>
   );
 };
 
