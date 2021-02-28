@@ -76,7 +76,7 @@ const TSTable = (props) => {
                   >
                     <td>{item.id}</td>
                     <td>Normal</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
                   </tr>
                 );
               if (

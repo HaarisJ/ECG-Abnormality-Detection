@@ -14,12 +14,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/testset", (req, res) => {
-  db.query("SELECT * FROM testset", (err, result) => {
-    res.status(200).json({
-      numResults: result.length,
-      data: result,
+  try {
+    db.query("SELECT * FROM testset", (err, result) => {
+      res.status(200).json({
+        numResults: result.length,
+        data: result,
+      });
     });
-  });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get("/testset/:id", (req, res) => {
