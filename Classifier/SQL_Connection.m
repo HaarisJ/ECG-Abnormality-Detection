@@ -29,11 +29,9 @@ while (true)
         selectquery = strcat('SELECT value FROM realset_data WHERE id =', num2str(count));
         data = select(conn,selectquery); % using count, it grabs the data of the most recent entry
 
-
-        % Prepare data to be in the correct formaat for accuracy.m
-        ECGData = table2array(data);
-        %ECGDataNew = resample(ecgData, 75, 32); % This resamples from fs=128 to fs=300
+        ecg_Data = table2array(data);
         fs = 300;
+        ECGData = Notch_Filter(ecg_Data, fs);
 
 
         %% Classify the ECG
