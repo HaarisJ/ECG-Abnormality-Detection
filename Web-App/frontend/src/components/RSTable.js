@@ -21,111 +21,51 @@ const RSTable = (props) => {
           <tbody>
             {props.entries.map((item) => {
               const prediction = item.label;
-              const truth = item.true_lab;
-              if (prediction === "NSR" && truth === "NSR\r")
+              if (prediction === "NSR")
                 return (
                   <tr
                     className=""
-                    onClick={() => props.click(item.id, "Normal", "Normal")}
+                    onClick={() =>
+                      props.click(item.id, item.datetime, "Normal")
+                    }
                   >
                     <td>{item.id}</td>
-                    <td>Normal</td>
+                    <td>{item.datetime}</td>
                     <td>Normal</td>
                   </tr>
                 );
-              if (prediction === "NSR" && truth === "Other\r")
-                return (
-                  <tr
-                    className="table-danger"
-                    onClick={() => props.click(item.id, "Normal", "Abnormal")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Normal</td>
-                    <td>Irregular</td>
-                  </tr>
-                );
-              if (prediction === "NSR" && truth === "Noisy\r")
-                return (
-                  <tr
-                    className="table-danger"
-                    onClick={() => props.click(item.id, "Normal", "Noisy")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Normal</td>
-                    <td>Noisy</td>
-                  </tr>
-                );
-              if (prediction === "Other" && truth === "Other\r")
+
+              if (prediction === "Other")
                 return (
                   <tr
                     className=""
-                    onClick={() => props.click(item.id, "Abnormal", "Abnormal")}
+                    onClick={() =>
+                      props.click(item.id, item.datetime, "Abnormal")
+                    }
                   >
                     <td>{item.id}</td>
-                    <td>Irregular</td>
+                    <td>{item.datetime}</td>
                     <td>Irregular</td>
                   </tr>
                 );
-              if (prediction === "Other" && truth === "NSR\r")
-                return (
-                  <tr
-                    className="table-danger"
-                    onClick={() => props.click(item.id, "Abnormal", "Normal")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Irregular</td>
-                    <td>Normal</td>
-                  </tr>
-                );
-              if (prediction === "Other" && truth === "Noisy\r")
-                return (
-                  <tr
-                    className="bg-danger"
-                    onClick={() => props.click(item.id, "Abnormal", "Noisy")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Irregular</td>
-                    <td>Noisy</td>
-                  </tr>
-                );
-              if (prediction === "Noisy" && truth === "Noisy\r")
+
+              if (prediction === "Noisy")
                 return (
                   <tr
                     className=""
-                    onClick={() => props.click(item.id, "Noisy", "Noisy")}
+                    onClick={() => props.click(item.id, item.datetime, "Noisy")}
                   >
                     <td>{item.id}</td>
-                    <td>Noisy</td>
+                    <td>{item.datetime}</td>
                     <td>Noisy</td>
                   </tr>
                 );
-              if (prediction === "Noisy" && truth === "NSR\r")
-                return (
-                  <tr
-                    className="bg-danger"
-                    onClick={() => props.click(item.id, "Noisy", "Normal")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Noisy</td>
-                    <td>Normal</td>
-                  </tr>
-                );
-              if (prediction === "Noisy" && truth === "Other\r")
-                return (
-                  <tr
-                    className="bg-danger"
-                    onClick={() => props.click(item.id, "Noisy", "Abnormal")}
-                  >
-                    <td>{item.id}</td>
-                    <td>Noisy</td>
-                    <td>Irregular</td>
-                  </tr>
-                );
+
               return (
-                <tr className="table-primary">
+                <tr className="table-danger">
                   <td>{item.id}</td>
+                  <td>{item.datetime}</td>
                   <td>{prediction}</td>
-                  <td>{truth}</td>
                 </tr>
               );
             })}

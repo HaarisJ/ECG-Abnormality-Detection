@@ -44,11 +44,33 @@ app.get("/testset/:id", (req, res) => {
 });
 
 app.get("/realset", (req, res) => {
-  res.send("Reached /realset");
+  try {
+    db.query("SELECT * FROM realset", (err, result) => {
+      res.status(200).json({
+        numResults: result.length,
+        data: result,
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get("/realset/:id", (req, res) => {
-  res.send("Reached /realset/" + req.params.id);
+  const id = req.params.id;
+  try {
+    db.query(
+      `SELECT * FROM realset INNER JOIN realset_data ON realset.id = realset_data.id WHERE realset.id=${id}`,
+      (err, result) => {
+        res.status(200).json({
+          // numResults: result.length,
+          data: result,
+        });
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 const port = process.env.PORT || 3001;

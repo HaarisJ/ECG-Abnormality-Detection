@@ -63,12 +63,24 @@ export default function Dashboard() {
     }
   };
 
-  const onRowClick = async (id, prediction, truth) => {
+  const onTsRowClick = async (id, prediction, truth) => {
     try {
       // console.log(id);
       const res = await FetchECGData.get(`/testset/${id}`);
       setGraphData(res.data.data);
       setEcgState({ predict: prediction, truth: truth });
+      // console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onRsRowClick = async (id, datetime, prediction) => {
+    try {
+      // console.log(id);
+      const res = await FetchECGData.get(`/realset/${id}`);
+      setGraphData(res.data.data);
+      setEcgState({ predict: prediction, truth: datetime });
       // console.log(data);
     } catch (err) {
       console.log(err);
@@ -82,12 +94,12 @@ export default function Dashboard() {
   const table = tsFlag ? (
     <TSTable
       entries={tsTableEntries}
-      click={onRowClick}
+      click={onTsRowClick}
       tab={selectedClass}
       changeClass={tableClassHandler}
     />
   ) : (
-    <RSTable entries={tsTableEntries} click={onRowClick} />
+    <RSTable entries={rsTableEntries} click={onRsRowClick} />
   );
 
   const statusIndicators = !tsFlag ? (
