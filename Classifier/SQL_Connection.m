@@ -3,8 +3,8 @@ load AdaBoostPrimary
 load AdaBoostSecondaryA
 load AdaBoostSecondaryB
 
-ECG_Results = table('Size', [1,2], 'VariableNames',{'id', 'label'}, ...
-'VariableTypes', {'int8','string'}); % Table to store the final result
+ECG_Results = table('Size', [1,3], 'VariableNames',{'id', 'label', 'datetime'}, ...
+'VariableTypes', {'int8','string','string'}); % Table to store the final result
 
 %% Form the connection to the ecgdata database
 datasource = 'ecgdata'
@@ -30,6 +30,8 @@ while (true)
         data = select(conn,selectquery); % using count, it grabs the data of the most recent entry
 
         ecg_Data = table2array(data);
+        ecg_Data = cast(ecg_Data, 'double');
+        ecg_Data = ecg_Data * 3.3/4096;
         fs = 300;
         ECGData = Notch_Filter(ecg_Data, fs);
 
@@ -50,15 +52,24 @@ while (true)
         end
         %% Prepare data and submit back to DB
         ECG_Results.id = count;
-        ECG_Results.label = ClassifyResult;
+        ECG_Results.label = classifyResult;
+        ECG_Results.datetime = datestr(datetime);
 
         wherequery = strcat('WHERE id =', num2str(count));
         update(conn, 'realset', 'label', ECG_Results(1,2), wherequery);
+        update(conn, 'realset', 'datetime', ECG_Results(1,3), wherequery);
+        
+%        n = length(ECGData);
+%        RealsetData = repmat(count,1,n)';
+%        RealsetData = array2table([repmat(count,1,n)' (1:n)' ECGData], 'VariableNames', {'id','index','value'});
+        
+%         update(conn, 'realset_data', 'value', RealsetData(:,3), wherequery);
         
         IndFlag = 0;
         Flag = array2table(IndFlag);
-        wherequery = ('WHERE flag.flag = 1')
+        wherequery = ('WHERE flag.flag = 1');
         update(conn, 'flag', 'flag', IndFlag, wherequery);
+        disp("Complete")
     end
 end
-%close(conn)
+close(conn)

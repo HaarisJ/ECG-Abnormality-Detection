@@ -43,7 +43,7 @@ end
 if(ismember(4,FeatureIndices))
     i1 = find(f<0.5,1,'last');
     i2 = find(f>5,1,'first');
-    KurtosisFreqDom = kurtosis(FFTCoefficients(i1:i2))
+    KurtosisFreqDom = kurtosis(FFTCoefficients(i1:i2));
     features3=[features3 KurtosisFreqDom];
 end
 
