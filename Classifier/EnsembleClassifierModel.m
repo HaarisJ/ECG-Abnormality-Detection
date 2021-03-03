@@ -9,6 +9,12 @@ PrimaryClassifier_FeatureIndex  = L1 ;
 SecondaryClassifierB_FeatureIndex  = L3 ;
 SecondaryClassifierA_FeatureIndex  = L2 ;
 
+
+% if (length(FeatureVector) ~= 166)
+%     PredictedLabel = 3;
+%     return
+% end
+
 % Predicition Placeholder
 PredictedLabel = 1;
 
