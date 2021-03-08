@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 const Graph = (props) => {
-  const xlabs = new Array(2500);
+  const xlabs = new Array(3000);
   for (let i = 0; i < xlabs.length; i++) {
     let num = i / 300;
     xlabs[i] = num.toFixed(1);
@@ -30,8 +30,8 @@ const Graph = (props) => {
               },
             ],
           }}
-          height={300}
-          width={600}
+          height={500}
+          width={800}
           options={{
             maintainAspectRatio: false,
             legend: {

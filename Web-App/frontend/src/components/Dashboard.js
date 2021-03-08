@@ -3,7 +3,8 @@ import FetchECGData from "../apis/FetchECGData";
 import Graph from "./Graph";
 import TSTable from "./TSTable";
 import RSTable from "./RSTable";
-import { Button, Container } from "react-bootstrap";
+import StatusIndicators from "./StatusIndicators";
+import { Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
@@ -20,6 +21,7 @@ export default function Dashboard() {
     condition: "",
   });
   const [selectedClass, setSelectedClass] = useState(0);
+  const [selectedRowId, setSelectedRowId] = useState(0);
   const [error, setError] = useState("");
   const { logout } = useAuth();
   const history = useHistory();
@@ -51,12 +53,14 @@ export default function Dashboard() {
   const realtimeBtnHandler = () => {
     setTsFlag(0);
     setGraphData([]);
+    setSelectedRowId(0);
     setRsLabels({ status: "", condition: "" });
   };
 
   const testsetBtnHandler = () => {
     setTsFlag(1);
     setGraphData([]);
+    setSelectedRowId(0);
     setTsLabels({ predict: "", truth: "" });
   };
 
@@ -78,6 +82,7 @@ export default function Dashboard() {
       console.log(res.data.data);
       setGraphData(res.data.data);
       setTsLabels({ predict: prediction, truth: truth });
+      setSelectedRowId(id);
       // console.log(data);
     } catch (err) {
       console.log(err);
@@ -89,6 +94,7 @@ export default function Dashboard() {
       // console.log(id);
       const res = await FetchECGData.get(`/realset/${id}`);
       setGraphData(res.data.data);
+      setSelectedRowId(id);
       setRsLabels({
         sample: id,
         time: datetime,
@@ -110,53 +116,23 @@ export default function Dashboard() {
       click={onTsRowClick}
       tab={selectedClass}
       changeClass={tableClassHandler}
+      selectedRow={selectedRowId}
     />
   ) : (
-    <RSTable entries={rsTableEntries} click={onRsRowClick} />
-  );
-
-  const statusIndicators = !tsFlag ? (
-    <Container className="d-flex align-items-left justify-content-center">
-      <h5 className="text-justify">
-        Sample #: <span>{rsLabels.sample}</span>
-      </h5>
-      <h5 className="text-justify">
-        Time Recorded: <span>{rsLabels.time}</span>
-      </h5>
-      <h5 className="text-justify">
-        ECG Condition:{" "}
-        <span className="badge bg-success">{rsLabels.condition}</span>
-      </h5>
-    </Container>
-  ) : (
-    <div>
-      <h5 className="text-justify">
-        Predicted Class:{" "}
-        {tsLabels.predict === "Normal" ? (
-          <span className="badge bg-success">{tsLabels.predict}</span>
-        ) : tsLabels.predict === "Abnormal" ? (
-          <span className="badge bg-danger">{tsLabels.predict}</span>
-        ) : (
-          <span className="badge bg-warning">{tsLabels.predict}</span>
-        )}
-      </h5>
-      <h5 className="text-justify">
-        Ground Truth:{" "}
-        {tsLabels.truth === "Normal" ? (
-          <span className="badge bg-success">{tsLabels.truth}</span>
-        ) : tsLabels.truth === "Abnormal" ? (
-          <span className="badge bg-danger">{tsLabels.truth}</span>
-        ) : (
-          <span className="badge bg-warning">{tsLabels.truth}</span>
-        )}
-      </h5>
-    </div>
+    <RSTable
+      entries={rsTableEntries}
+      click={onRsRowClick}
+      tab={selectedClass}
+      changeClass={tableClassHandler}
+      selectedRow={selectedRowId}
+    />
   );
 
   return (
-    <div className="App container-sm">
-      <h1>ECG Abnormality Detection</h1>
-      <div className="btn-group">
+    <div className="App mx-4">
+      <h1 className="mt-4">ECG Abnormality Detection</h1>
+      <h5 className="mt-1">A Capstone Project By Group 25</h5>
+      <div className="btn-group my-3">
         <button
           className={
             tsFlag
@@ -179,17 +155,21 @@ export default function Dashboard() {
           Testset
         </button>
       </div>
-      {statusIndicators}
+      <StatusIndicators
+        tsFlag={tsFlag}
+        tsLabels={tsLabels}
+        rsLabels={rsLabels}
+      />
       {/* <Graph vals={graphData} /> */}
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-9">
           <Graph vals={graphData} />
         </div>
-        <div className="col-md-4">{table}</div>
+        <div className="col-md-3">{table}</div>
         {/* <div className="col-md-4">{table}</div>
         <div className="col-md-8"></div> */}
       </div>
-      <Button variant="link" onClick={logoutHandler}>
+      <Button className="mt-5" variant="link" onClick={logoutHandler}>
         Log Out
       </Button>
     </div>

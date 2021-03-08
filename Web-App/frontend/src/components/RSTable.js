@@ -1,12 +1,45 @@
 const RSTable = (props) => {
   return (
     <div>
-      <h4>Testset Results</h4>
+      <h4>Realtime Results</h4>
+      <div className="btn-group container">
+        <button
+          className={
+            props.tab === 0
+              ? "btn btn-outline-success active"
+              : "btn btn-outline-success"
+          }
+          onClick={() => props.changeClass(0)}
+        >
+          Normal
+        </button>
+
+        <button
+          className={
+            props.tab === 1
+              ? "btn btn-outline-danger active"
+              : "btn btn-outline-danger"
+          }
+          onClick={() => props.changeClass(1)}
+        >
+          Abnormal
+        </button>
+        <button
+          className={
+            props.tab === 2
+              ? "btn btn-outline-warning active"
+              : "btn btn-outline-warning"
+          }
+          onClick={() => props.changeClass(2)}
+        >
+          Noisy
+        </button>
+      </div>
       <div
         className="table-container"
         style={{ height: "300px", overflow: "auto" }}
       >
-        <table className="table table-striped table-hover table-sm">
+        <table className="table table-hover table-sm">
           <thead>
             <tr>
               <th>#</th>
@@ -17,7 +50,7 @@ const RSTable = (props) => {
           <tbody>
             {props.entries.map((item) => {
               const prediction = item.label;
-              if (prediction === "NSR")
+              if (prediction === "NSR" && props.tab === 0)
                 return (
                   <tr
                     key={item.id}
@@ -32,7 +65,7 @@ const RSTable = (props) => {
                   </tr>
                 );
 
-              if (prediction === "Other")
+              if (prediction === "Other" && props.tab === 1)
                 return (
                   <tr
                     key={item.id}
@@ -43,11 +76,11 @@ const RSTable = (props) => {
                   >
                     <td>{item.id}</td>
                     <td>{item.datetime}</td>
-                    <td>Irregular</td>
+                    <td>Abnormal</td>
                   </tr>
                 );
 
-              if (prediction === "Noisy")
+              if (prediction === "Noisy" && props.tab === 2)
                 return (
                   <tr
                     key={item.id}
@@ -60,13 +93,7 @@ const RSTable = (props) => {
                   </tr>
                 );
 
-              return (
-                <tr key={item.id} className="table-danger">
-                  <td>{item.id}</td>
-                  <td>{item.datetime}</td>
-                  <td>{prediction}</td>
-                </tr>
-              );
+              return undefined;
             })}
           </tbody>
         </table>

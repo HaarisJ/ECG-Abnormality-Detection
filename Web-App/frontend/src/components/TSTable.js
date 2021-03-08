@@ -55,7 +55,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() => props.click(item.id, "Normal", "Normal")}
                   >
                     <td>{item.id}</td>
@@ -71,7 +75,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className="table-danger"
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : "table-danger"
+                    }
                     onClick={() => props.click(item.id, "Normal", "Abnormal")}
                   >
                     <td>{item.id}</td>
@@ -87,7 +95,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className="table-danger"
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : "table-danger"
+                    }
                     onClick={() => props.click(item.id, "Normal", "Noisy")}
                   >
                     <td>{item.id}</td>
@@ -103,7 +115,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() => props.click(item.id, "Abnormal", "Abnormal")}
                   >
                     <td>{item.id}</td>
@@ -119,7 +135,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className="table-danger"
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : "table-danger"
+                    }
                     onClick={() => props.click(item.id, "Abnormal", "Normal")}
                   >
                     <td>{item.id}</td>
@@ -135,7 +155,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className="table-danger"
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : "table-danger"
+                    }
                     onClick={() => props.click(item.id, "Abnormal", "Noisy")}
                   >
                     <td>{item.id}</td>
@@ -151,7 +175,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() => props.click(item.id, "Noisy", "Noisy")}
                   >
                     <td>{item.id}</td>
@@ -167,7 +195,11 @@ const TSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className="table-danger"
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : "table-danger"
+                    }
                     onClick={() => props.click(item.id, "Noisy", "Normal")}
                   >
                     <td>{item.id}</td>
@@ -191,6 +223,7 @@ const TSTable = (props) => {
                     <td>Abnormal</td>
                   </tr>
                 );
+              return undefined;
             })}
           </tbody>
         </table>
