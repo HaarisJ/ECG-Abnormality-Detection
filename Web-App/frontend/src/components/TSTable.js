@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const TSTable = (props) => {
   return (
     <div>
@@ -56,6 +54,7 @@ const TSTable = (props) => {
               if (prediction === "NSR" && truth === "NSR\r" && props.tab === 0)
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() => props.click(item.id, "Normal", "Normal")}
                   >
@@ -71,6 +70,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Normal", "Abnormal")}
                   >
@@ -86,6 +86,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Normal", "Noisy")}
                   >
@@ -101,6 +102,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() => props.click(item.id, "Abnormal", "Abnormal")}
                   >
@@ -116,6 +118,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Abnormal", "Normal")}
                   >
@@ -131,6 +134,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Abnormal", "Noisy")}
                   >
@@ -146,6 +150,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() => props.click(item.id, "Noisy", "Noisy")}
                   >
@@ -161,6 +166,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Noisy", "Normal")}
                   >
@@ -176,6 +182,7 @@ const TSTable = (props) => {
               )
                 return (
                   <tr
+                    key={item.id}
                     className="table-danger"
                     onClick={() => props.click(item.id, "Noisy", "Abnormal")}
                   >

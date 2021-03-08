@@ -1,8 +1,4 @@
-import { useState } from "react";
-
 const RSTable = (props) => {
-  const [tableState, setTableState] = useState(0);
-
   return (
     <div>
       <h4>Testset Results</h4>
@@ -24,6 +20,7 @@ const RSTable = (props) => {
               if (prediction === "NSR")
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() =>
                       props.click(item.id, item.datetime, "Normal")
@@ -38,6 +35,7 @@ const RSTable = (props) => {
               if (prediction === "Other")
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() =>
                       props.click(item.id, item.datetime, "Abnormal")
@@ -52,6 +50,7 @@ const RSTable = (props) => {
               if (prediction === "Noisy")
                 return (
                   <tr
+                    key={item.id}
                     className=""
                     onClick={() => props.click(item.id, item.datetime, "Noisy")}
                   >
@@ -62,7 +61,7 @@ const RSTable = (props) => {
                 );
 
               return (
-                <tr className="table-danger">
+                <tr key={item.id} className="table-danger">
                   <td>{item.id}</td>
                   <td>{item.datetime}</td>
                   <td>{prediction}</td>

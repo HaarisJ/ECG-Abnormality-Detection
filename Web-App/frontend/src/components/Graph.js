@@ -8,6 +8,11 @@ const Graph = (props) => {
     xlabs[i] = num.toFixed(1);
   }
 
+  const ecgData =
+    props.vals[0] !== undefined && props.vals[0].value !== undefined
+      ? props.vals.map((item) => item.value)
+      : props.vals.map((item) => item);
+
   return (
     <React.Fragment>
       <div className="">
@@ -17,7 +22,7 @@ const Graph = (props) => {
             datasets: [
               {
                 label: "Voltage (mV)",
-                data: props.vals.map((item) => item.value),
+                data: ecgData,
                 backgroundColor: "rgba(2, 117, 216, 0.0)",
                 borderColor: "rgba(2, 117, 216, 0.7)",
                 pointBorderColor: "rgba(0,0,0,0)",

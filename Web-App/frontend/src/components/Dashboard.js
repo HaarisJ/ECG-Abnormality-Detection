@@ -3,7 +3,7 @@ import FetchECGData from "../apis/FetchECGData";
 import Graph from "./Graph";
 import TSTable from "./TSTable";
 import RSTable from "./RSTable";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
@@ -13,8 +13,12 @@ export default function Dashboard() {
   const [graphData, setGraphData] = useState([]);
   const [tsTableEntries, setTsTableEntries] = useState([]);
   const [rsTableEntries, setRsTableEntries] = useState([]);
-  const [ecgState, setEcgState] = useState({ predict: "", truth: "" });
-  const [appStatus, setAppStatus] = useState("Waiting for new data");
+  const [tsLabels, setTsLabels] = useState({ predict: "", truth: "" });
+  const [rsLabels, setRsLabels] = useState({
+    sample: 0,
+    time: 0,
+    condition: "",
+  });
   const [selectedClass, setSelectedClass] = useState(0);
   const [error, setError] = useState("");
   const { logout } = useAuth();
@@ -46,10 +50,14 @@ export default function Dashboard() {
 
   const realtimeBtnHandler = () => {
     setTsFlag(0);
+    setGraphData([]);
+    setRsLabels({ status: "", condition: "" });
   };
 
   const testsetBtnHandler = () => {
     setTsFlag(1);
+    setGraphData([]);
+    setTsLabels({ predict: "", truth: "" });
   };
 
   const logoutHandler = async () => {
@@ -67,8 +75,9 @@ export default function Dashboard() {
     try {
       // console.log(id);
       const res = await FetchECGData.get(`/testset/${id}`);
+      console.log(res.data.data);
       setGraphData(res.data.data);
-      setEcgState({ predict: prediction, truth: truth });
+      setTsLabels({ predict: prediction, truth: truth });
       // console.log(data);
     } catch (err) {
       console.log(err);
@@ -80,7 +89,11 @@ export default function Dashboard() {
       // console.log(id);
       const res = await FetchECGData.get(`/realset/${id}`);
       setGraphData(res.data.data);
-      setEcgState({ predict: prediction, truth: datetime });
+      setRsLabels({
+        sample: id,
+        time: datetime,
+        condition: prediction,
+      });
       // console.log(data);
     } catch (err) {
       console.log(err);
@@ -103,34 +116,38 @@ export default function Dashboard() {
   );
 
   const statusIndicators = !tsFlag ? (
-    <div>
+    <Container className="d-flex align-items-left justify-content-center">
       <h5 className="text-justify">
-        Status: <span className="badge bg-primary">{appStatus}</span>
+        Sample #: <span>{rsLabels.sample}</span>
       </h5>
       <h5 className="text-justify">
-        ECG Condition: <span className="badge bg-success">Normal</span>
+        Time Recorded: <span>{rsLabels.time}</span>
       </h5>
-    </div>
+      <h5 className="text-justify">
+        ECG Condition:{" "}
+        <span className="badge bg-success">{rsLabels.condition}</span>
+      </h5>
+    </Container>
   ) : (
     <div>
       <h5 className="text-justify">
         Predicted Class:{" "}
-        {ecgState.predict === "Normal" ? (
-          <span className="badge bg-success">{ecgState.predict}</span>
-        ) : ecgState.predict === "Abnormal" ? (
-          <span className="badge bg-danger">{ecgState.predict}</span>
+        {tsLabels.predict === "Normal" ? (
+          <span className="badge bg-success">{tsLabels.predict}</span>
+        ) : tsLabels.predict === "Abnormal" ? (
+          <span className="badge bg-danger">{tsLabels.predict}</span>
         ) : (
-          <span className="badge bg-warning">{ecgState.predict}</span>
+          <span className="badge bg-warning">{tsLabels.predict}</span>
         )}
       </h5>
       <h5 className="text-justify">
         Ground Truth:{" "}
-        {ecgState.truth === "Normal" ? (
-          <span className="badge bg-success">{ecgState.truth}</span>
-        ) : ecgState.truth === "Abnormal" ? (
-          <span className="badge bg-danger">{ecgState.truth}</span>
+        {tsLabels.truth === "Normal" ? (
+          <span className="badge bg-success">{tsLabels.truth}</span>
+        ) : tsLabels.truth === "Abnormal" ? (
+          <span className="badge bg-danger">{tsLabels.truth}</span>
         ) : (
-          <span className="badge bg-warning">{ecgState.truth}</span>
+          <span className="badge bg-warning">{tsLabels.truth}</span>
         )}
       </h5>
     </div>
@@ -163,10 +180,14 @@ export default function Dashboard() {
         </button>
       </div>
       {statusIndicators}
-      <Graph vals={graphData} />
+      {/* <Graph vals={graphData} /> */}
       <div className="row">
+        <div className="col-md-8">
+          <Graph vals={graphData} />
+        </div>
         <div className="col-md-4">{table}</div>
-        <div className="col-md-8"></div>
+        {/* <div className="col-md-4">{table}</div>
+        <div className="col-md-8"></div> */}
       </div>
       <Button variant="link" onClick={logoutHandler}>
         Log Out
