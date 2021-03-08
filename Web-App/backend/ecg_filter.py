@@ -30,6 +30,7 @@ lines = sys.stdin.readlines()
 loaded = json.loads(lines[0])
 filtered_data = filter_ECG(loaded, Fs)
 filtered_data = np.around(filtered_data, decimals=2)
+filtered_data = filtered_data * (3.3/4096)
 
 # comma_delimited_data = [str(el) for el in filtered_data]
 # comma_delimited_data = "[" + ",".join(comma_delimited_data) + "]"
