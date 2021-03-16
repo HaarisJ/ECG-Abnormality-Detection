@@ -4,7 +4,7 @@ export default function StatusIndicators(props) {
   const statusIndicators = !props.tsFlag ? (
     <Container className="d-flex flex-column align-items-start mx-5">
       <h5 className="text-justify">
-        Sample <span>{props.rsLabels.sample}</span>
+        Sample: <span>{props.rsLabels.sample}</span>
       </h5>
       <h5 className="text-justify">
         Time Recorded: <span>{props.rsLabels.time}</span>
@@ -16,6 +16,9 @@ export default function StatusIndicators(props) {
     </Container>
   ) : (
     <div className="d-flex flex-column align-items-start mx-5">
+      <h5 className="text-justify">
+        Sample: <span>{props.tsLabels.sample}</span>
+      </h5>
       <h5 className="text-justify">
         Predicted Class:{" "}
         {props.tsLabels.predict === "Normal" ? (

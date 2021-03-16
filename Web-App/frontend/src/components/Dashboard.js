@@ -4,17 +4,22 @@ import Graph from "./Graph";
 import TSTable from "./TSTable";
 import RSTable from "./RSTable";
 import StatusIndicators from "./StatusIndicators";
-import { Button } from "react-bootstrap";
+import { Button, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Dashboard() {
   // STATES
   const [tsFlag, setTsFlag] = useState(true);
+  const [showAbnormalDetected, setShowAbnormalDetected] = useState(true);
   const [graphData, setGraphData] = useState([]);
   const [tsTableEntries, setTsTableEntries] = useState([]);
   const [rsTableEntries, setRsTableEntries] = useState([]);
-  const [tsLabels, setTsLabels] = useState({ predict: "", truth: "" });
+  const [tsLabels, setTsLabels] = useState({
+    sample: 0,
+    predict: "",
+    truth: "",
+  });
   const [rsLabels, setRsLabels] = useState({
     sample: 0,
     time: 0,
@@ -54,20 +59,19 @@ export default function Dashboard() {
     setTsFlag(0);
     setGraphData([]);
     setSelectedRowId(0);
-    setRsLabels({ status: "", condition: "" });
+    setRsLabels({ sample: "", time: "", condition: "" });
   };
 
   const testsetBtnHandler = () => {
     setTsFlag(1);
     setGraphData([]);
     setSelectedRowId(0);
-    setTsLabels({ predict: "", truth: "" });
+    setTsLabels({ sample: "", predict: "", truth: "" });
   };
 
   const logoutHandler = async () => {
     setError("");
     try {
-      console.log("logout handler try hit");
       await logout();
       history.push("/login");
     } catch {
@@ -79,9 +83,8 @@ export default function Dashboard() {
     try {
       // console.log(id);
       const res = await FetchECGData.get(`/testset/${id}`);
-      console.log(res.data.data);
       setGraphData(res.data.data);
-      setTsLabels({ predict: prediction, truth: truth });
+      setTsLabels({ sample: id, predict: prediction, truth: truth });
       setSelectedRowId(id);
       // console.log(data);
     } catch (err) {
@@ -132,7 +135,24 @@ export default function Dashboard() {
     <div className="App mx-4">
       <h1 className="mt-4">ECG Abnormality Detection</h1>
       <h5 className="mt-1">A Capstone Project By Group 25</h5>
-      <div className="btn-group my-3">
+      {error && <Alert variant="danger">{error}</Alert>}
+      {showAbnormalDetected &&
+      rsTableEntries.some((reading) => reading.label === "Other") ? (
+        <div
+          className="alert alert-warning alert-dismissible fade show"
+          role="alert"
+        >
+          Abnormal ECG Detected!
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+            onClick={() => setShowAbnormalDetected(false)}
+          ></button>
+        </div>
+      ) : null}
+      <div className="btn-group w-25 mt-3">
         <button
           className={
             tsFlag

@@ -1,7 +1,6 @@
 const RSTable = (props) => {
   return (
     <div>
-      <h4>Realtime Results</h4>
       <div className="btn-group container">
         <button
           className={
@@ -54,7 +53,11 @@ const RSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() =>
                       props.click(item.id, item.datetime, "Normal")
                     }
@@ -69,7 +72,11 @@ const RSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() =>
                       props.click(item.id, item.datetime, "Abnormal")
                     }
@@ -84,7 +91,11 @@ const RSTable = (props) => {
                 return (
                   <tr
                     key={item.id}
-                    className=""
+                    className={
+                      props.selectedRow === item.id
+                        ? "bg-primary text-white"
+                        : ""
+                    }
                     onClick={() => props.click(item.id, item.datetime, "Noisy")}
                   >
                     <td>{item.id}</td>

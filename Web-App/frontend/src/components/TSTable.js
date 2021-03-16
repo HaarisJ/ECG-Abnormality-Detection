@@ -1,7 +1,6 @@
 const TSTable = (props) => {
   return (
     <div>
-      <h4>Testset Results</h4>
       <div className="btn-group container">
         <button
           className={
